@@ -1,7 +1,7 @@
-import express from 'express'
-import cors from 'cors'
-import multer from 'multer'
-import csvToJson from 'convert-csv-to-json'
+import express from 'express';
+import cors from 'cors';
+import multer from 'multer';
+import csvToJson from 'convert-csv-to-json';
 
 const app = express()
 const port = process.env.PORT ?? 3000
@@ -29,7 +29,7 @@ app.post('/api/files', upload.single('file'), async(req, res) => {
     try {
         const rawCsv = Buffer.from(file.buffer).toString('utf-8')
         // 5. Transform string(csv) to CSV
-        const jsonData = csvToJson.csvStringToJson(rawCsv)
+        jsonData = csvToJson.csvStringToJson(rawCsv)
     } catch (error) {
         return res.status(500).json({ data: [], message: 'Error parsing th file' })
     }
@@ -42,14 +42,26 @@ app.post('/api/files', upload.single('file'), async(req, res) => {
 
 app.get('/api/users', async(req, res) => {
     // 1. Extract the query param 'q' from the request
+    const { q } = req.query
     // 2. Validate that we have the query param
+    if (!q) {
+        return res.status(500).json({ data: [], message: 'Query param "q" is reqired' })
+    }
+    if (Array.isArray(q)) {
+        return res.status(500).json({ data: [], message: 'Query param "q" must b a string' })
+    }
     // 3. Filter the data from the db (or memory) with the query param
-
+    const search = q.toString().toLowerCase()
+    const filteredData = userData.filter( row => {
+        return Object
+            .values(row)
+            .some(value => value.toLowerCase().includes(search) )
+    })
     // 4. Return 200 with the filtered data
-    return res.status(200).json({ data: [] })
+    return res.status(200).json({ data: filteredData })
 })
 
 app.listen(port, () => {
-    console.log('Server is running' + port );
+    console.log('Server is running ' + port );
     
 })
