@@ -3,6 +3,7 @@ import { Toaster, toast } from 'sonner'
 import './App.css'
 import { uploadFile } from './services/upload'
 import { type Data } from './types'
+import { Search } from './steps/search'
 
 const APP_STATUS = {
   IDLE: 'idle',
@@ -90,6 +91,9 @@ function App() {
                   </button>
                 )}
               </form>
+            )}
+            { appStatus === APP_STATUS.READY_USAGE && (
+              <Search initailData={data} /> 
             )}
           </section>
         </article>

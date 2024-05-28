@@ -4,8 +4,13 @@
   "description": "Prueba tecnica react backend y frontend",
   "main": "index.js",
   "scripts": {
+    "dev": "npm run dev --workspaces",
     "test": "npm run test"
   },
+  "workspaces":[
+    "backend",
+    "frontend"
+  ],
   "repository": {
     "type": "git",
     "link": "eslint . --ext ts,tsx --report-unused-disabled-directives --max-warnings 0",
